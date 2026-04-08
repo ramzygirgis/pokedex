@@ -6,6 +6,11 @@ import "os"
 
 
 func main() {
+	c := config{
+		next: "https://pokeapi.co/api/v2/location-area?offset=0",
+		previous: "",
+	}
+
 	commandRegistry = map[string]cliCommand{
 		"exit": {
 			name:        "exit",
@@ -17,7 +22,12 @@ func main() {
 			description: "Displays a help message",
 			callback:    commandHelp,
 		},
-	}	
+		"map": {
+			name: 		"map",
+			description: "Displays the next 20 locations",
+			callback: commandMap,
+		},
+	}
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Print(prompt)
 	for {
@@ -26,7 +36,7 @@ func main() {
 			tokens := cleanInput(input)
 			if len(tokens) != 0 {
 				if cmd, ok := commandRegistry[tokens[0]]; ok {
-				err := cmd.callback()
+				err := cmd.callback(&c)
 				if err != nil {
 		  		fmt.Println(err)
 				}

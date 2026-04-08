@@ -2,25 +2,78 @@ package main
 
 import "fmt"
 import "os"
+import "net/http"
+import "encoding/json"
 
 type cliCommand struct {
 	name	string
 	description string
-	callback func() error
+	callback func(*config) error
 }
+
+
+type config struct {
+	next string
+	current string
+	previous string
+}
+
+// can likely refine the following class, since 
+
+type locationArea struct {
+	Count int `json:"count"`
+	Next string `json:"next"`
+	Previous string `json:"previous"`
+	Results []struct{
+		Name string `json:"name"`
+		Url string `json:"url"`
+	} `json:"results"`
+}
+
 
 var commandRegistry map[string]cliCommand
 
-func commandExit() error {
+func commandExit(c *config) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 	return nil
 }
 
-func commandHelp() error {
+func commandHelp(c *config) error {
 	fmt.Printf("Welcome to the Pokedex!\nUsage:\n\n")
 	for _, v := range commandRegistry {
 		fmt.Printf("%s: %s\n", v.name, v.description)
 	}
 	return nil
+}
+
+func commandMap(c *config) error {
+	req, err := http.NewRequest("GET", c.next, nil)
+	if err != nil {
+		return err
+	}
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	defer resp.Body.Close()
+	
+	var l locationArea
+	if err := json.NewDecoder(resp.Body).Decode(&l); err != nil {
+		return err
+	}
+
+
+	for i := 0; i < len(l.Results); i++ {
+		fmt.Println(l.Results[i].Name)
+	}
+
+	c.previous = l.Previous
+	c.next = l.Next
+
+	return nil
+
 }
