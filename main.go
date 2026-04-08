@@ -6,18 +6,18 @@ import "os"
 
 
 func main() {
-	// declare "globals". would be sick if i can find a way to put this in another file
-	//
-	prompt := "Pokedex > "
-	commandRegistry := map[string]cliCommand{
+	commandRegistry = map[string]cliCommand{
 		"exit": {
-			name: "exit",
+			name:        "exit",
 			description: "Exit the Pokedex",
-			callback: commandExit,
+			callback:    commandExit,
 		},
-	}
-
-
+		"help": {
+			name:        "help",
+			description: "Displays a help message",
+			callback:    commandHelp,
+		},
+	}	
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Print(prompt)
 	for {
