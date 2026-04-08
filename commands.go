@@ -11,14 +11,11 @@ type cliCommand struct {
 	callback func(*config) error
 }
 
-
 type config struct {
 	next string
 	current string
 	previous string
 }
-
-// can likely refine the following class, since 
 
 type locationArea struct {
 	Count int `json:"count"`
@@ -66,14 +63,45 @@ func commandMap(c *config) error {
 		return err
 	}
 
-
 	for i := 0; i < len(l.Results); i++ {
 		fmt.Println(l.Results[i].Name)
 	}
 
 	c.previous = l.Previous
 	c.next = l.Next
+	return nil
 
+}
+
+func commandMapb(c *config) error {
+	if c.previous == "" {
+		fmt.Println("No previous locations\n")
+		return nil
+	}
+	req, err := http.NewRequest("GET", c.previous, nil)
+	if err != nil {
+		return err
+	}
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	defer resp.Body.Close()
+	
+	var l locationArea
+	if err := json.NewDecoder(resp.Body).Decode(&l); err != nil {
+		return err
+	}
+
+	for i := 0; i < len(l.Results); i++ {
+		fmt.Println(l.Results[i].Name)
+	}
+
+	c.previous = c.next
+	c.next = l.Next
 	return nil
 
 }

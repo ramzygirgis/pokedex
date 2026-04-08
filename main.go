@@ -27,6 +27,11 @@ func main() {
 			description: "Displays the next 20 locations",
 			callback: commandMap,
 		},
+		"mapb": {
+			name: "mapb",
+			description: "Displays the previous 20 locations",
+			callback: commandMapb,
+		},
 	}
 	scanner := bufio.NewScanner(os.Stdin)
 	fmt.Print(prompt)
