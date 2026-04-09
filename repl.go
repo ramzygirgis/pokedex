@@ -1,26 +1,45 @@
 package main
 
-import "strings"
+import(
+	"strings"
+	"github.com/ramzygirgis/pokedex/internal/pokeapi"
+	"fmt"
+	"os"
+	"bufio"
 
-func cleanInput(s string) []string {
-	/*
-	given a string s, cleanInput produces a slice of strings containing the "words" of s
-	according to whitespace. 
-	All words are converted to lowercase, and all leading or trailing whitespace is trimmed.
-	*/
-	cleanStrings := make([]string, 0)
-	l := 0
-	for r := 0; r <len(s); r++ {
-		if string(s[r]) == " " {
-			if l < r {
-				cleanStrings = append(cleanStrings, strings.ToLower(s[l:r]))
-			}	
-			l = r + 1
-			continue
+type config struct {
+	next string
+	previous string
+	pokeapiClient pokeapi.Client
+}
+
+func startRepl(c *config) {
+	scanner := bufio.NewScanner(os.Stdin)
+	for {
+		fmt.Print(prompt)
+		if scanner.Scan() {
+			input := scanner.Text()
+			tokens := cleanInput(input)
+			commandName := ""
+			if len(tokens) != 0 {
+				commandName = tokens[0]
+			}
+			
+			if cmd, ok := getCommands()[commandName]; ok {
+				err := cmd.callback(&c)
+				if err != nil {
+		  		fmt.Println(err)
+				}
+			} else {
+				fmt.Println("Unknown command")
+			}
 		}
 	}
-	if l < len(s) {
-		cleanStrings = append(cleanStrings, strings.ToLower(s[l:len(s)]))
-	}
-	return cleanStrings
+}
+
+
+func cleanInput(text string) []string {
+	output := strnigs.ToLower(text)
+	words := strings.Fields(output)
+	return words
 }

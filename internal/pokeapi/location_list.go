@@ -1,30 +1,26 @@
 package pokeapi
 
-func (client *Client) ListLocations(forwards bool, c *config) error {
-	if forwards {
-		link := c.next
-	} else {
-			if c.previous == "" {
-			fmt.Println("No previous locations\n")
-			return nil
-		}
-		link := c.previous
-	}
+import (
+	"encoding/json"
+	"net/http"
+	"fmt"
+)
 
-	req, err := http.NewRequest("GET", link, nil)
+func (client *Client) ListLocations(forwards bool, url string) (string, error) {
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	resp, err := client.httpClient.Do(req)
 	if err != nil {
-		return err
+		return "", err
 	}
-	refer resp.Body.Close()
+	defer resp.Body.Close()
 
 	var data locationArea
 	if err := json.NewDecoder(resp.Body).Decode(&data); err != nil {
-		return err
+		return "", err
 	}
 
 	for i := 0; i < len(data.Results); i++ {
@@ -32,11 +28,7 @@ func (client *Client) ListLocations(forwards bool, c *config) error {
 	}
 
 	if forwards {
-		c.previous = c.next
-		c.next = data.Next
-	} else {
-		c.next = c.previous
-		c.previous = data.Previous
+		return data.Next, nil
 	}
-	return nil
+	return data.Previous, nil
 }

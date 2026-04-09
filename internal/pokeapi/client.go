@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 )
--
+
 type Client struct {
 	httpClient http.Client
 }
