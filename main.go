@@ -1,6 +1,5 @@
 package main
 
-import "fmt"
 import "time"
 import "github.com/ramzygirgis/pokedex/internal/pokeapi"
 

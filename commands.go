@@ -2,8 +2,6 @@ package main
 
 import "fmt"
 import "os"
-import "net/http"
-import "encoding/json"
 
 
 type cliCommand struct {
@@ -16,7 +14,7 @@ type cliCommand struct {
 func commandExit(c *config) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
-	return nil
+		return nil
 }
 
 
@@ -31,7 +29,7 @@ func commandHelp(c *config) error {
 
 func commandMapf(c *config) error {
 	url := c.next
-	navUrl, err := c.pokeapiClient.ListLocations(true, url)
+	navUrl, err := c.client.ListLocations(true, url)
 	if err != nil {
 		return err
 	}
@@ -48,7 +46,7 @@ func commandMapb(c *config) error {
 		return nil
 	}
 
-	navUrl, err := c.pokeapiClient.ListLocations(false, url)
+	navUrl, err := c.client.ListLocations(false, url)
 	if err != nil {
 		return err
 	}

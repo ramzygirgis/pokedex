@@ -6,11 +6,12 @@ import(
 	"fmt"
 	"os"
 	"bufio"
+)
 
 type config struct {
 	next string
 	previous string
-	pokeapiClient pokeapi.Client
+	client pokeapi.Client
 }
 
 func startRepl(c *config) {
@@ -26,7 +27,7 @@ func startRepl(c *config) {
 			}
 			
 			if cmd, ok := getCommands()[commandName]; ok {
-				err := cmd.callback(&c)
+				err := cmd.callback(c)
 				if err != nil {
 		  		fmt.Println(err)
 				}
@@ -39,7 +40,7 @@ func startRepl(c *config) {
 
 
 func cleanInput(text string) []string {
-	output := strnigs.ToLower(text)
+	output := strings.ToLower(text)
 	words := strings.Fields(output)
 	return words
 }
