@@ -67,7 +67,7 @@ func commandMap(c *config) error {
 		fmt.Println(l.Results[i].Name)
 	}
 
-	c.previous = l.Previous
+	c.previous = c.next
 	c.next = l.Next
 	return nil
 
@@ -99,9 +99,9 @@ func commandMapb(c *config) error {
 	for i := 0; i < len(l.Results); i++ {
 		fmt.Println(l.Results[i].Name)
 	}
-
-	c.previous = c.next
-	c.next = l.Next
+	
+	c.next = c.previous
+	c.previous = l.Previous
 	return nil
 
 }
