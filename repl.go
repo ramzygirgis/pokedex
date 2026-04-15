@@ -3,6 +3,7 @@ package main
 import(
 	"strings"
 	"github.com/ramzygirgis/pokedex/internal/pokeapi"
+	"github.com/ramzygirgis/pokedex/internal/pokecache"
 	"fmt"
 	"os"
 	"bufio"
@@ -12,6 +13,7 @@ type config struct {
 	next string
 	previous string
 	client pokeapi.Client
+	cache pokeapi.Cache
 }
 
 func startRepl(c *config) {

@@ -29,10 +29,20 @@ func commandHelp(c *config) error {
 
 func commandMapf(c *config) error {
 	url := c.next
-	navUrl, err := c.client.ListLocations(true, url)
+
+	if l, ok := c.cache.Get(url); !ok {
+		l, err := c.client.PokeapiCall(url)
+		if err != nil {
+			return err
+		}
+		c.cache.Add(url, l)
+	}
+
+	navUrl, err := ListLocations(true, l)
 	if err != nil {
 		return err
 	}
+	
 	c.previous = url
 	c.next = navUrl
 	return nil
@@ -46,11 +56,19 @@ func commandMapb(c *config) error {
 		return nil
 	}
 
-	navUrl, err := c.client.ListLocations(false, url)
+	if l, ok := c.cache.Get(url); !ok {
+		l, err := c.client.PokeapiCall(url)
+		if err != nil {
+			return err
+		}
+		c.cache.Add(url, l)
+	}
+
+	navUrl, err := ListLocations(false, l)
 	if err != nil {
 		return err
 	}
-
+	
 	c.next = url
 	c.previous = navUrl
 	return nil

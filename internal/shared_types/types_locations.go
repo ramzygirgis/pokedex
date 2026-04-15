@@ -1,4 +1,4 @@
-package pokeapi
+package shared_types
 
 type locationArea struct {
 	Count int `json:"count"`
