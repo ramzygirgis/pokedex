@@ -2,6 +2,7 @@ package main
 
 import "fmt"
 import "os"
+import "github.com/ramzygirgis/pokedex/internal/pokeapi"
 
 
 type cliCommand struct {
@@ -30,15 +31,17 @@ func commandHelp(c *config) error {
 func commandMapf(c *config) error {
 	url := c.next
 
-	if l, ok := c.cache.Get(url); !ok {
-		l, err := c.client.PokeapiCall(url)
+	l, ok := c.cache.Get(url)
+	if !ok {
+		var err error
+		l, err = c.client.PokeapiCall(url)
 		if err != nil {
 			return err
 		}
 		c.cache.Add(url, l)
 	}
 
-	navUrl, err := ListLocations(true, l)
+	navUrl, err := pokeapi.ListLocations(true, l)
 	if err != nil {
 		return err
 	}
@@ -55,16 +58,18 @@ func commandMapb(c *config) error {
 		fmt.Println("You're on the first page")
 		return nil
 	}
-
-	if l, ok := c.cache.Get(url); !ok {
-		l, err := c.client.PokeapiCall(url)
+	
+	l, ok := c.cache.Get(url)
+	if !ok {
+		var err error
+		l, err = c.client.PokeapiCall(url)
 		if err != nil {
 			return err
 		}
 		c.cache.Add(url, l)
 	}
 
-	navUrl, err := ListLocations(false, l)
+	navUrl, err := pokeapi.ListLocations(false, l)
 	if err != nil {
 		return err
 	}

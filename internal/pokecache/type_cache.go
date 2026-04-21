@@ -9,7 +9,7 @@ import(
 
  type cacheEntry struct {
 	 createdAt time.Time
-	 val shared_types.locationArea // val []byte
+	 val shared_types.LocationArea // val []byte
  }
 
 
@@ -34,7 +34,7 @@ func NewCache(interval time.Duration) *Cache {
 }
 
 
-func (c *Cache) Add(key string, val shared_types.locationArea) { // val []byte
+func (c *Cache) Add(key string, val shared_types.LocationArea) { // val []byte
 	c.mux.Lock()
 	defer c.mux.Unlock()
 	c.cacheMap[key] = cacheEntry{
@@ -44,12 +44,12 @@ func (c *Cache) Add(key string, val shared_types.locationArea) { // val []byte
 }
 
 
-func (c *Cache) Get(key string) (shared_types.locationArea, bool) { // ([]byte, bool) 
+func (c *Cache) Get(key string) (shared_types.LocationArea, bool) { // ([]byte, bool) 
 	c.mux.Lock()
 	defer c.mux.Unlock()
 	entry, ok := c.cacheMap[key]
 	if !ok {
-		b := shared_types.locationArea{} // make([]byte, 0)
+		b := shared_types.LocationArea{} // make([]byte, 0)
 		return b, false
 	}
 	return entry.val, true

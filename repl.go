@@ -13,7 +13,7 @@ type config struct {
 	next string
 	previous string
 	client pokeapi.Client
-	cache pokeapi.Cache
+	cache pokecache.Cache
 }
 
 func startRepl(c *config) {
