@@ -31,14 +31,14 @@ func commandHelp(c *config) error {
 func commandMapf(c *config) error {
 	url := c.next
 
-	l, ok := c.cache.Get(url)
+	l, ok := c.locationsCache.Get(url)
 	if !ok {
 		var err error
-		l, err = c.client.PokeapiCall(url)
+		l, err = c.client.LocationsCall(url)
 		if err != nil {
 			return err
 		}
-		c.cache.Add(url, l)
+		c.locationsCache.Add(url, l)
 	}
 
 	navUrl, err := pokeapi.ListLocations(true, l)
@@ -59,14 +59,14 @@ func commandMapb(c *config) error {
 		return nil
 	}
 	
-	l, ok := c.cache.Get(url)
+	l, ok := c.locationsCache.Get(url)
 	if !ok {
 		var err error
-		l, err = c.client.PokeapiCall(url)
+		l, err = c.client.LocationsCall(url)
 		if err != nil {
 			return err
 		}
-		c.cache.Add(url, l)
+		c.locationsCache.Add(url, l)
 	}
 
 	navUrl, err := pokeapi.ListLocations(false, l)
@@ -79,6 +79,29 @@ func commandMapb(c *config) error {
 	return nil
 }
 
+func commandExplore(c *config) error {
+	name := c.name
+	if name == "" {
+		fmt.Println("No pokemon name provided")
+		return nil
+	}
+
+	data, ok := c.namesCache.Get(name)
+	if !ok {
+		var err error
+		data, err = c.client.ExploreCall(name)
+		if err != nil {
+			return err
+		}
+		c.namesCache.Add(name, data)
+	}
+
+	err := pokeapi.ListEncounters(name, data)
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
 func getCommands() map[string]cliCommand {
 	return map[string]cliCommand{
@@ -101,6 +124,11 @@ func getCommands() map[string]cliCommand {
 			name:        "exit",
 			description: "Exit the Pokedex",
 			callback:    commandExit,
+		},
+		"explore": {
+			name: "explore",
+			description: "Explore a location. Requires `name` argument",
+			callback: commandExplore,
 		},
 	}
 }

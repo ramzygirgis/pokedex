@@ -3,30 +3,26 @@ package pokecache
 import(
 			"time"
 			"sync"
-			"github.com/ramzygirgis/pokedex/internal/shared_types"
 		)
 
 
- type cacheEntry struct {
+ type cacheEntry[T any] struct {
 	 createdAt time.Time
-	 val shared_types.LocationArea // val []byte
+	 val T
  }
 
 
-type Cache struct {
-	cacheMap map[string]cacheEntry
+type Cache[T any] struct {
+	cacheMap map[string]cacheEntry[T]
 	mux sync.Mutex
 	interval time.Duration
 }
 
 
 
-func NewCache(interval time.Duration) *Cache {
-	data := make(map[string]cacheEntry)
-	mux := sync.Mutex{}
-	c := &Cache{
-		cacheMap: data,
-		mux: mux,
+func NewCache[T any](interval time.Duration) *Cache[T] {
+	c := &Cache[T]{
+		cacheMap: make(map[string]cacheEntry[T]),
 		interval: interval,
 	}
 	go c.reapLoop()
@@ -34,36 +30,37 @@ func NewCache(interval time.Duration) *Cache {
 }
 
 
-func (c *Cache) Add(key string, val shared_types.LocationArea) { // val []byte
+func (c *Cache[T]) Add(key string, val T) {
 	c.mux.Lock()
 	defer c.mux.Unlock()
-	c.cacheMap[key] = cacheEntry{
+
+	c.cacheMap[key] = cacheEntry[T]{
 		val: val,
 		createdAt: time.Now(),
 	}
 }
 
 
-func (c *Cache) Get(key string) (shared_types.LocationArea, bool) { // ([]byte, bool) 
+func (c *Cache[T]) Get(key string) (T, bool) { // ([]byte, bool) 
 	c.mux.Lock()
 	defer c.mux.Unlock()
 	entry, ok := c.cacheMap[key]
 	if !ok {
-		b := shared_types.LocationArea{} // make([]byte, 0)
-		return b, false
+		var zero T
+		return zero, false
 	}
 	return entry.val, true
 }
 
 
-func (c *Cache) reapLoop() {
+func (c *Cache[T]) reapLoop() {
 	ticker := time.NewTicker(c.interval) 
 	defer ticker.Stop()
 	for range ticker.C {
 		c.mux.Lock()
 		now := time.Now()
 		for k,v := range c.cacheMap {
-			if now.Sub(v.createdAt) >= c.interval {
+			if now.After(v.createdAt.Add(c.interval)) {
 				delete(c.cacheMap, k)
 			}
 		}

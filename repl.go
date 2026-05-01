@@ -9,11 +9,14 @@ import(
 	"bufio"
 )
 
+
 type config struct {
-	next string
+	next     string
 	previous string
-	client pokeapi.Client
-	cache pokecache.Cache
+	client   pokeapi.Client
+	locationsCache    pokecache.Cache[pokeapi.LocationArea]
+	namesCache pokecache.Cache[[]string]
+	name string
 }
 
 func startRepl(c *config) {
@@ -26,6 +29,9 @@ func startRepl(c *config) {
 			commandName := ""
 			if len(tokens) != 0 {
 				commandName = tokens[0]
+				if commandName == "explore" && len(tokens) > 1 {
+						c.name = tokens[1]
+				}
 			}
 			
 			if cmd, ok := getCommands()[commandName]; ok {

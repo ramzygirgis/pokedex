@@ -1,9 +1,7 @@
 package main
 
 import(
-	"fmt"
 	"testing"
-	"time"
 )
 
 func TestCleanInput(t *testing.T) {
