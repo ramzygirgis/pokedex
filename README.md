@@ -1,2 +1,1 @@
-# pokedex
-cli tool lol
+# pokedex CLI
