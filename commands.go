@@ -1,8 +1,11 @@
 package main
 
-import "fmt"
-import "os"
-import "github.com/ramzygirgis/pokedex/internal/pokeapi"
+import (
+	"fmt"
+	"os"
+	"math/rand"
+	"github.com/ramzygirgis/pokedex/internal/pokeapi"
+)
 
 
 type cliCommand struct {
@@ -103,6 +106,13 @@ func commandExplore(c *config) error {
 	return nil
 }
 
+
+func commandCatch(c *config) error {
+	fmt.Printf("Throwing a Pokeball at %s...\n", c.name)
+
+}
+
+
 func getCommands() map[string]cliCommand {
 	return map[string]cliCommand{
 		"help": {
@@ -127,8 +137,13 @@ func getCommands() map[string]cliCommand {
 		},
 		"explore": {
 			name: "explore",
-			description: "Explore a location. Requires `name` argument",
+			description: "Explore a location. Requires `locationName` argument",
 			callback: commandExplore,
 		},
+		"catch": {
+			name: "catch",
+			description: "Catch a pokemon. Requires `pokemonName` argument",
+			callback: commandCatch,
+		}
 	}
 }

@@ -32,6 +32,13 @@ func startRepl(c *config) {
 				if commandName == "explore" && len(tokens) > 1 {
 						c.name = tokens[1]
 				}
+				if commandName == "catch"{
+					if len(tokens) > 1 {
+						c.name = tokens[1]
+					} else {
+						fmt.Println("not enough args provided for the catch command; expected a pokemon name")
+					}
+				}
 			}
 			
 			if cmd, ok := getCommands()[commandName]; ok {
