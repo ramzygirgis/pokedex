@@ -17,6 +17,7 @@ type config struct {
 	locationsCache    pokecache.Cache[pokeapi.LocationArea]
 	namesCache pokecache.Cache[[]string]
 	name string
+	pokedex map[string]pokeapi.Pokemon
 }
 
 func startRepl(c *config) {

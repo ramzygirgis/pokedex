@@ -109,7 +109,20 @@ func commandExplore(c *config) error {
 
 func commandCatch(c *config) error {
 	fmt.Printf("Throwing a Pokeball at %s...\n", c.name)
+	pokemon, err := c.PokemonCall(c.name)
+	if err != nil {
+		return err
+	}
 
+	p := pokeapi.CatchSuccessProbability(pokemon)
+	num := rand.Float(64)
+	if p < 1 - num {
+		fmt.Printf("Pokeball missed. Try again!")
+		return nil
+	}
+	c.pokedex[pokemon.Name] = pokemon
+	fmt.Printf("Pokemon caught! %s added to pokedex", pokemon.Name)
+	return nil
 }
 
 
@@ -144,6 +157,6 @@ func getCommands() map[string]cliCommand {
 			name: "catch",
 			description: "Catch a pokemon. Requires `pokemonName` argument",
 			callback: commandCatch,
-		}
+		},
 	}
 }
