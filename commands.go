@@ -109,19 +109,19 @@ func commandExplore(c *config) error {
 
 func commandCatch(c *config) error {
 	fmt.Printf("Throwing a Pokeball at %s...\n", c.name)
-	pokemon, err := c.PokemonCall(c.name)
+	pokemon, err := c.client.PokemonCall(c.name)
 	if err != nil {
 		return err
 	}
 
 	p := pokeapi.CatchSuccessProbability(pokemon)
-	num := rand.Float(64)
+	num := rand.Float64()
 	if p < 1 - num {
-		fmt.Printf("Pokeball missed. Try again!")
+		fmt.Printf("Pokeball missed. Try again!\n")
 		return nil
 	}
 	c.pokedex[pokemon.Name] = pokemon
-	fmt.Printf("Pokemon caught! %s added to pokedex", pokemon.Name)
+	fmt.Printf("Pokemon caught! %s added to pokedex\n", pokemon.Name)
 	return nil
 }
 

@@ -20,7 +20,7 @@ func main() {
 		locationsCache: *locationsCache,
 		namesCache: *namesCache,
 		name: "",
-		pokedex: make([string]pokeapi.Pokemon),
+		pokedex: make(map[string]pokeapi.Pokemon, 0),
 	}
 
 	startRepl(c)
