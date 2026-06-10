@@ -45,7 +45,7 @@ func (p Pokemon) Print() {
 	fmt.Printf("Weight: %d\n", p.Weight)
 	fmt.Println("Stats:")
 	for _, s := range p.Stats {
-		fmt.Printf("	-%s: %d\n", s.Stat.Name, s.Effort)
+		fmt.Printf("	-%s: %d\n", s.Stat.Name, s.BaseStat)
 	}
 	fmt.Println("Types:")
 	for _, t := range p.Types {
