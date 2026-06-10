@@ -23,7 +23,7 @@ func commandExit(c *config) error {
 
 
 func commandHelp(c *config) error {
-	fmt.Printf("Welcome to the Pokedex!\nUsage:\n\n")
+	fmt.Printf("Welcome to the Pokedex!\nUsage:\n")
 	for _, v := range getCommands() {
 		fmt.Printf("%s: %s\n", v.name, v.description)
 	}
@@ -129,10 +129,19 @@ func commandCatch(c *config) error {
 func commandInspect(c *config) error {
 	pokemon, exists := c.pokedex[c.name]
 	if !exists {
-		fmt.Printf("you have not caught that pokemon")
+		fmt.Println("you have not caught that pokemon")
 		return nil
 	}
 	pokemon.Print()
+	return nil
+}
+
+
+func commandPokedex(c *config) error {
+	fmt.Printf("Your Pokedex:\n")
+	for name, _ := range c.pokedex {
+		fmt.Printf(" - %s\n", name)
+	}
 	return nil
 }
 
@@ -173,6 +182,11 @@ func getCommands() map[string]cliCommand {
 			name: "inspect",
 			description: "Inspect a pokemon. Requires `pokemonName` argument",
 			callback: commandInspect,
+		},
+		"pokedex": {
+			name: "pokedex",
+			description: "View all pokemon in your pokedex",
+			callback: commandPokedex,
 		},
 	}
 }

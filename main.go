@@ -8,7 +8,7 @@ import(
 
 
 func main() {
-	pokeClient := pokeapi.NewClient(5 * time.Second)
+	pokeClient := pokeapi.NewClient(30 * time.Second)
 	duration := 5 * time.Second
 	locationsCache := pokecache.NewCache[pokeapi.LocationArea](duration)
 	namesCache := pokecache.NewCache[[]string](duration)
