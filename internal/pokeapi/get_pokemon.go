@@ -38,3 +38,18 @@ func CatchSuccessProbability(pokemon Pokemon) float64 {
 	return 55.0/float64(BaseExp)
 }
 
+
+func (p Pokemon) Print() {
+	fmt.Printf("Name: %s\n", p.Name)
+	fmt.Printf("Height: %d\n", p.Height)
+	fmt.Printf("Weight: %d\n", p.Weight)
+	fmt.Println("Stats:")
+	for _, s := range p.Stats {
+		fmt.Printf("	-%s: %d\n", s.Stat.Name, s.Effort)
+	}
+	fmt.Println("Types:")
+	for _, t := range p.Types {
+		fmt.Printf("	- %s\n", t.Type.Name)
+	}
+}
+

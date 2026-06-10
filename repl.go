@@ -33,11 +33,11 @@ func startRepl(c *config) {
 				if commandName == "explore" && len(tokens) > 1 {
 						c.name = tokens[1]
 				}
-				if commandName == "catch"{
+				if commandName == "catch" || commandName == "inspect"{
 					if len(tokens) > 1 {
 						c.name = tokens[1]
 					} else {
-						fmt.Println("not enough args provided for the catch command; expected a pokemon name")
+						fmt.Printf("not enough args provided for the %s command; expected a pokemon name\n", commandName)
 					}
 				}
 			}

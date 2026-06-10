@@ -126,6 +126,17 @@ func commandCatch(c *config) error {
 }
 
 
+func commandInspect(c *config) error {
+	pokemon, exists := c.pokedex[c.name]
+	if !exists {
+		fmt.Printf("you have not caught that pokemon")
+		return nil
+	}
+	pokemon.Print()
+	return nil
+}
+
+
 func getCommands() map[string]cliCommand {
 	return map[string]cliCommand{
 		"help": {
@@ -157,6 +168,11 @@ func getCommands() map[string]cliCommand {
 			name: "catch",
 			description: "Catch a pokemon. Requires `pokemonName` argument",
 			callback: commandCatch,
+		},
+		"inspect": {
+			name: "inspect",
+			description: "Inspect a pokemon. Requires `pokemonName` argument",
+			callback: commandInspect,
 		},
 	}
 }

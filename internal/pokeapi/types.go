@@ -22,15 +22,6 @@ type ExploreResult struct {
 	PokemonEncounters    []PokemonEncounter    `json:"pokemon_encounters"`
 }
 
-type Pokemon struct {
-	Id int `json:"id"`
-	Name string `json:"name"`
-	BaseExperience int `json:"base_experience"`
-	Height int `json:"height"`
-	Is_Default bool `json:"is_default"`
-	Weight int `json:"weight"`
-}
-
 type NamedAPIResource struct {
 	Name string `json:"name"`
 	URL  string `json:"url"`
