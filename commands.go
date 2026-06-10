@@ -108,11 +108,12 @@ func commandExplore(c *config) error {
 
 
 func commandCatch(c *config) error {
-	fmt.Printf("Throwing a Pokeball at %s...\n", c.name)
 	pokemon, err := c.client.PokemonCall(c.name)
 	if err != nil {
 		return err
 	}
+
+	fmt.Printf("Throwing a Pokeball at %s...\n", c.name)
 
 	p := pokeapi.CatchSuccessProbability(pokemon)
 	num := rand.Float64()
